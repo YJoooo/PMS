@@ -1,0 +1,10 @@
+jdbc.driver=oracle.jdbc.driver.OracleDriver
+jdbc.url=jdbc:oracle:thin:@220.73.54.156:1521:xe
+jdbc.user=pms
+jdbc.pass=1111
+
+# 파일 업로드 정보
+upload=C:/Users/kkd90/Desktop/JAVA_EDU/TeamProject/PMS/src/main/webapp/fileupload/
+
+# 프로필 이미지 업로드 정보
+uploadpf=C:/Users/kkd90/Desktop/JAVA_EDU/TeamProject/PMS/src/main/webapp/NiceAdmin/assets/img/profile/

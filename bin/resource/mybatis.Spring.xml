@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<typeAliases>
+		<typeAlias alias="account" type="PMS.vo.Account"/>
+		<typeAlias alias="accountsch" type="PMS.vo.AccountSch"/>
+		<typeAlias alias="accountdc" type="PMS.vo.AccountDeptCount"/>
+		<typeAlias alias="mpsl" type="PMS.vo.MypageScheduleList"/>
+		<typeAlias alias="accountp" type="PMS.vo.AccountProfile"/>
+		<typeAlias alias="mySchedule" type="PMS.vo.mySchedule"/>
+		<typeAlias alias="myProject" type="PMS.vo.myProject"/>
+		<typeAlias alias="Project" type="PMS.vo.Project"/>
+		<typeAlias alias="DeptBudget" type="PMS.vo.DeptBudget"/>
+		<typeAlias alias="DeptCnt" type="PMS.vo.getDeptCnt"/>
+		<typeAlias alias="ProjectBudget" type="PMS.vo.ProjectBudget"/>
+		<typeAlias alias="ProjectUserCnt" type="PMS.vo.ProjectUserCnt"/>
+		<typeAlias alias="ProjectScheduleJoin" type="PMS.vo.ProjectScheduleJoin"/>
+		<typeAlias alias="prjParticipant" type="PMS.vo.PrjParticipant"/>
+		<typeAlias alias="Schedule" type="PMS.vo.Schedule"/>
+		<typeAlias alias="SchParticipant" type="PMS.vo.SchParticipant"/>
+		<typeAlias alias="SchPartiInfo" type="PMS.vo.SchPartiInfo"/>
+		<typeAlias alias="Alert" type="PMS.vo.Alert"/>
+		<typeAlias alias="ganttData" type="PMS.vo.GanttData"/>
+		<typeAlias alias="comment" type="PMS.vo.Comment"/>
+		<typeAlias alias="commentfile" type="PMS.vo.CommentFile"/>
+		<typeAlias alias="gantt" type="PMS.vo.Gantt"/>
+		<typeAlias alias="calendar" type="PMS.vo.Calendar"/>
+		<typeAlias alias="timeline" type="PMS.vo.Timeline"/>
+		<typeAlias alias="timeResult" type="PMS.vo.TimeResult"/>
+		<typeAlias alias="ScheduleStatusCnt" type="PMS.vo.ScheduleStatusCnt"/>
+	</typeAliases>
+
+	<mappers>
+		<mapper resource="resource/team5Mapper.xml"/>
+		<mapper resource="resource/mainMapper.xml"/>
+		<mapper resource="resource/ganttMapper.xml"/>
+		<mapper resource="resource/alertMapper.xml"/>
+		<mapper resource="resource/accountMapper.xml"/>
+		<mapper resource="resource/projectMapper.xml"/>
+		<mapper resource="resource/commentMapper.xml"/>
+		<mapper resource="resource/fullCalendarMapper.xml"/>
+		<mapper resource="resource/TimelineMapper.xml"/>
+	</mappers>
+	
+</configuration>

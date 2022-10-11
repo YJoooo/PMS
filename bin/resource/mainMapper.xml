@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="PMS.dao.MainDao">
+	<select id="getTitleByNo" resultType="string" parameterType="int">
+		SELECT title
+		FROM project
+		WHERE pno = #{pno}
+	</select>
+	<select id="getScheduleList" resultType="schedule" parameterType="int">
+		SELECT *
+		FROM SCHEDULE
+		WHERE pno = #{pno}
+	</select>
+	<select id="getSchedule" resultType="schedule" parameterType="int">
+		SELECT *
+		FROM SCHEDULE
+		WHERE sno = #{sno}
+	</select>
+	<insert id="regSchedule" parameterType="schedule">
+		INSERT INTO SCHEDULE
+		values(seq_sno.nextval, #{pno}, #{sname}, #{status}, #{progress}, 
+			to_date(#{startDate_s}, 'YYYY-MM-DD'), to_date(#{endDate_s}, 'YYYY-MM-DD'), #{budget})
+	</insert>
+	<update id="uptSchedule" parameterType="schedule">
+		UPDATE SCHEDULE
+		SET progress = #{progress}
+		WHERE sno = #{sno}
+	</update>
+	<delete id="delSchedule" parameterType="int">
+		DELETE
+		FROM SCHEDULE
+		WHERE sno = #{sno}
+	</delete>
+	<update id="uptScheduleByPM" parameterType="schedule">
+		UPDATE SCHEDULE 
+		SET sname = #{sname},
+			status = #{status},
+			progress = #{progress},
+			startDate = to_date(#{startDate_s}, 'YYYY-MM-DD'),
+			endDate = to_date(#{endDate_s}, 'YYYY-MM-DD'),
+			budget = #{budget}
+		WHERE sno = #{sno}
+	</update>
+	<select id="getPrjparticipant" resultType="account" parameterType="int">
+		SELECT a.userno, pno, name, email, dept, position
+		FROM PRJPARTICIPANT p, ACCOUNT a
+		WHERE p.USERNO = a.USERNO 
+		AND pno=#{pno}
+	</select>
+	<!-- 프로젝트 진행도 -->
+	<select id="getProgress" resultType="int" parameterType="int">
+		SELECT NVL(AVG(s.PROGRESS),0)
+		FROM PROJECT p, SCHEDULE s
+		WHERE p.PNO = s.PNO(+)
+		AND p.PNO = #{pno}
+		GROUP BY p.PNO
+	</select>
+	<!-- 일정 참가자 추가 -->
+	<insert id="insSchParticipant" parameterType="SchParticipant">
+		INSERT INTO SCHPARTICIPANT values(#{userno}, #{sno}, #{pno})
+	</insert>
+	<!-- 일정 참가자 조회 -->
+	<select id="showSchPartiInfo" resultType="SchPartiInfo" parameterType="int">
+		SELECT s.PNO, s.SNO, a.USERNO, a.NAME, a.POSITION, a.DEPT
+		FROM SCHPARTICIPANT s, ACCOUNT a
+		WHERE s.USERNO = a.USERNO 
+		AND sno = #{sno}
+	</select>
+	<!-- 일정 진행상태별 비율 조회 -->
+	<select id="getStatusCnt" resultType="ScheduleStatusCnt" parameterType="int">
+	SELECT STATUS, COUNT(*) stCnt, round(RATIO_TO_REPORT(COUNT(*)) OVER()*100,2) stRatio
+	FROM SCHEDULE
+	WHERE pno=#{pno}
+	GROUP BY STATUS
+	</select>
+	<!-- 일정 참가자 삭제 -->
+	<delete id="delSchParticipant" parameterType="SchParticipant">
+		DELETE FROM SCHPARTICIPANT
+		WHERE sno = #{sno} AND USERNO = #{userno}
+	</delete>
+	<!-- 일정 참가자 삭제(프로젝트 참가자 삭제) -->
+	<delete id="delSchPrjParticipant" parameterType="PrjParticipant">
+		DELETE FROM SCHPARTICIPANT
+		WHERE pno = #{pno} AND USERNO = #{userno}
+	</delete>
+	<!-- 프로젝트 참가자 삭제 -->
+	<delete id="delPrjParticipant" parameterType="PrjParticipant">
+		DELETE FROM PRJPARTICIPANT 
+		WHERE PNO = #{PNO} AND USERNO = #{USERNO}
+	</delete>
+</mapper>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="PMS.dao.AccountDao">
+	<select id="isMember" resultType="string" parameterType="account">
+		SELECT count(*)
+		FROM account
+		WHERE userno=#{userno}
+	</select>
+	<select id="loginCheck" resultType="string" parameterType="account">
+		SELECT count(*)
+		FROM account
+		WHERE userno = #{userno}
+		AND pw = #{pw}
+	</select>
+	<select id="getUserDetail" resultType="account" parameterType="account">
+		SELECT *
+		FROM account
+		WHERE userno = #{userno}
+	</select>
+	<update id="uptPw" parameterType="account">
+		UPDATE ACCOUNT 
+		SET pw = #{pw}
+		WHERE userno = #{userno}
+	</update>
+	<update id="uptUserInfo" parameterType="account">
+		UPDATE ACCOUNT 
+			SET email = #{email},
+				address = #{address},
+				birthdate = to_date(#{birthdateS},'YYYY-MM-DD'),
+				hpnum = #{hpnum}
+		WHERE userno = #{userno}
+	</update>
+	<select id="getMySList" resultType="mpsl" parameterType="string">
+		SELECT sc.sname, p.title, p.pno, a.name, a.position
+		FROM SCHEDULE sc, PROJECT p , account a
+		WHERE sc.sno IN (
+			SELECT s.SNO
+			FROM SCHPARTICIPANT s
+			WHERE s.userno = #{userno}
+		)
+		AND sc.pno = p.pno
+		AND a.userno = p.pmno
+	</select>
+	<insert id="insAccount" parameterType="account">
+	INSERT INTO account values('E'||to_char(acc_seq.nextval),#{pw},#{name},#{email}, '미정',
+		'신입',null,null,NULL,sysdate,'user')
+	</insert>
+	<select id="recentAccount" resultType="account">
+		SELECT *
+		FROM account
+		WHERE joindate = (
+			SELECT max(JOINDATE) 
+			FROM account
+		)
+	</select>
+	<select id="AccountList" resultType="account" parameterType="accountsch">
+		SELECT *
+		FROM (
+			SELECT rownum cnt, a.*
+			FROM account a
+			WHERE 1=1
+			<if test="userno != null">
+			AND userno LIKE '%'||#{userno}||'%'
+			</if>
+			<if test="name != null">
+			AND name LIKE '%'||#{name}||'%'
+			</if>
+			ORDER BY userno DESC)
+		where cnt between #{start} and #{end}
+		ORDER BY cnt
+	</select>
+	<select id="totCnt" parameterType="accountsch" resultType="int">
+		SELECT count(*)
+		FROM account
+		WHERE 1=1
+		<if test="userno != null">
+		AND userno LIKE '%'||#{userno}||'%'
+		</if>
+		<if test="name != null">
+		AND name LIKE '%'||#{name}||'%'
+		</if>
+	</select>
+	<update id="uptUserInfoUmPage" parameterType="account">
+		UPDATE ACCOUNT 
+			SET name = #{name},
+				dept = #{dept},
+				position = #{position},
+				auth = #{auth}
+		WHERE userno = #{userno}
+	</update>
+	<select id="getDeptCount" resultType="accountdc">
+		SELECT dept, count(*) count
+		FROM account
+		GROUP BY dept
+	</select>
+	<select id="getProfilePath" resultType="accountp" parameterType="string">
+		SELECT *
+		FROM profile
+		WHERE userno = #{userno}
+	</select>
+	<delete id="delAccount" parameterType="string">
+		DELETE FROM account
+		WHERE userno = #{userno}
+	</delete>
+	<insert id="insProfileImg" parameterType="accountp">
+		INSERT INTO profile values(#{userno}, #{path}, #{fname})
+	</insert>
+	<delete id="delProfileImg" parameterType="string">
+		DELETE FROM profile WHERE userno = #{userno}
+	</delete>
+	<select id="checkProfileImg" resultType="string" parameterType="string">
+		SELECT count(*)
+		FROM PROFILE
+		WHERE userno = #{userno}
+	</select>
+	
+	
+	<select id="getAccountList" resultType="account">
+		SELECT * FROM account
+	</select>
+</mapper>
+
+
+   
